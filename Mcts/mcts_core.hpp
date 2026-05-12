@@ -1,8 +1,16 @@
 #pragma once
 #include <random>
 #include <memory>
+#include <vector>
 #include "mcts_node.hpp"
 #include "mcts_interface.hpp"
+
+template <typename Action>
+struct PlanResult {
+    Action next_action;
+    std::vector<Action> predicted_sequence;
+    double estimated_score;
+};
 
 template <typename State, typename Action>
 Node<State, Action>* selection(Node<State, Action>* root, const MCTSInterface<State, Action>& game) {
@@ -69,4 +77,45 @@ Action mcts(const State& root_state, const MCTSInterface<State, Action>& game, i
         [](const auto& a, const auto& b) { return a->n < b->n; }
     );
     return best->action;
+}
+
+template <typename State, typename Action>
+PlanResult<Action> mcts_plan(const State& root_state, const MCTSInterface<State, Action>& game, int iterations = 1000) {
+    auto root = std::make_unique<Node<State, Action>>(root_state, Action{}, nullptr, game);
+    root->n = 1;
+
+    for (int i = 0; i < iterations; i++) {
+        Node<State, Action>* node = selection(root.get(), game);
+        Node<State, Action>* child = expansion(node, game);
+        double score = simulation(child->state, game);
+        backpropagation(child, score);
+    }
+
+    auto& best_child = *std::max_element(
+        root->children.begin(), root->children.end(),
+        [](const auto& a, const auto& b) { return a->n < b->n; }
+    );
+
+    std::vector<Action> predicted_sequence;
+    Node<State, Action>* current = best_child.get();
+    
+    while (current != nullptr && current->parent != nullptr) {
+        predicted_sequence.push_back(current->action);
+        auto& children = current->children;
+        if (!children.empty()) {
+            current = std::max_element(
+                children.begin(), children.end(),
+                [](const auto& a, const auto& b) { return a->n < b->n; }
+            )->get();
+        } else {
+            break;
+        }
+    }
+
+    PlanResult<Action> result;
+    result.next_action = best_child->action;
+    result.predicted_sequence = predicted_sequence;
+    result.estimated_score = best_child->v / best_child->n;
+
+    return result;
 }

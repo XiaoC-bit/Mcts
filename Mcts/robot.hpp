@@ -70,7 +70,7 @@ struct Robot {
     }
     
     bool is_idle(TimeType current_time) const {
-        return state == RobotState::IDLE && busy_until <= current_time;
+        return true;
     }
     
     bool is_busy(TimeType current_time) const {
