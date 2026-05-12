@@ -6,7 +6,7 @@
 int main() {
     fms::State state;
     
-    state.create_robot("Robot1", fms::Position{0, 0, 0}, 2);
+    state.create_robot("Robot1", fms::Position{0, 0, 0}, 1);
     state.create_machine("Machine1", fms::Position{5, 0, 0},1, 5);
     state.create_rack("StorageRack", fms::Position{10, 0, 0}, 5, 5);
     state.create_tool_rack("ToolRack", fms::Position{15, 0, 0}, 3, 5);
@@ -43,12 +43,11 @@ int main() {
     
     if (!actions.empty()) {
         auto result = mcts_plan(state, adapter, 100);
-        std::cout << "Best action type: " << fms::to_string(result.next_action.type) << std::endl;
-        std::cout << "Best action robot: " << result.next_action.robot_id << std::endl;
+        std::cout << "Best action: " << result.next_action.to_string() << std::endl;
         std::cout << "Estimated score: " << result.estimated_score << std::endl;
-        std::cout << "Predicted sequence length: " << result.predicted_sequence.size() << std::endl;
+        std::cout << "Predicted sequence (" << result.predicted_sequence.size() << " steps):" << std::endl;
         for (size_t i = 0; i < result.predicted_sequence.size(); ++i) {
-            std::cout << "  Step " << (i + 1) << ": " << fms::to_string(result.predicted_sequence[i].type) << std::endl;
+            std::cout << "  Step " << (i + 1) << ": " << result.predicted_sequence[i].to_string() << std::endl;
         }
     }
     

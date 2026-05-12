@@ -59,6 +59,41 @@ struct Action {
                machine_id == other.machine_id &&
                gripper_id == other.gripper_id;
     }
+    
+    std::string to_string() const {
+        std::string result = "Robot " + std::to_string(robot_id) + " ";
+        
+        switch (type) {
+            case ActionType::PICK:
+                result += "PICK from location " + std::to_string(source_location);
+                if (gripper_id != INVALID_ID) {
+                    result += " (gripper " + std::to_string(gripper_id) + ")";
+                }
+                break;
+            case ActionType::PLACE:
+                result += "PLACE material " + std::to_string(material_id) + " to location " + std::to_string(target_location);
+                if (gripper_id != INVALID_ID) {
+                    result += " (gripper " + std::to_string(gripper_id) + ")";
+                }
+                break;
+            case ActionType::LOAD_MACHINE:
+                result += "LOAD_MACHINE workpiece " + std::to_string(material_id) + " to machine " + std::to_string(machine_id);
+                break;
+            case ActionType::UNLOAD_MACHINE:
+                result += "UNLOAD_MACHINE from machine " + std::to_string(machine_id);
+                break;
+            case ActionType::CHANGE_TOOL:
+                result += "CHANGE_TOOL tool " + std::to_string(material_id) + " on machine " + std::to_string(machine_id);
+                break;
+            case ActionType::WAIT:
+                result += "WAIT for " + std::to_string(duration) + "s";
+                break;
+            default:
+                result += "UNKNOWN_ACTION";
+        }
+        
+        return result;
+    }
 };
 
 static inline Action make_pick_action(IdType robot_id, IdType source_loc, IdType gripper_id = INVALID_ID) {
