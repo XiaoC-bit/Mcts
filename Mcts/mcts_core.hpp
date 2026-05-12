@@ -33,6 +33,9 @@ double simulation(State state, const MCTSInterface<State, Action>& game) {
 
     while (!game.is_terminal(state)) {
         auto actions = game.legal_actions(state);
+        if (actions.empty()) {
+            break;
+        }
         std::uniform_int_distribution<int> dist(0, (int)actions.size() - 1);
         state = game.apply(state, actions[dist(rng)]);
     }
@@ -50,6 +53,7 @@ void backpropagation(Node<State, Action>* node, double score) {
 
 template <typename State, typename Action>
 Action mcts(const State& root_state, const MCTSInterface<State, Action>& game, int iterations = 1000) {
+
     auto root = std::make_unique<Node<State, Action>>(root_state, Action{}, nullptr, game);
     root->n = 1;
 

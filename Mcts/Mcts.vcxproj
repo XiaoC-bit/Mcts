@@ -140,12 +140,25 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="fms_types.cpp" />
     <ClCompile Include="mcts.cpp" />
+    <ClCompile Include="simulator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="action.hpp" />
+    <ClInclude Include="event.hpp" />
+    <ClInclude Include="fms_types.hpp" />
+    <ClInclude Include="location.hpp" />
+    <ClInclude Include="machine.hpp" />
+    <ClInclude Include="material.hpp" />
     <ClInclude Include="mcts_core.hpp" />
     <ClInclude Include="mcts_interface.hpp" />
     <ClInclude Include="mcts_node.hpp" />
+    <ClInclude Include="port.hpp" />
+    <ClInclude Include="rack.hpp" />
+    <ClInclude Include="robot.hpp" />
+    <ClInclude Include="simulator.hpp" />
+    <ClInclude Include="state.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

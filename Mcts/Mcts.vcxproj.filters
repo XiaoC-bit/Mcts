@@ -18,6 +18,12 @@
     <ClCompile Include="mcts.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="fms_types.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="simulator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mcts_node.hpp">
@@ -27,6 +33,39 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="mcts_interface.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="event.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="fms_types.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="location.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="machine.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="material.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="port.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="rack.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="robot.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="simulator.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="state.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="action.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
