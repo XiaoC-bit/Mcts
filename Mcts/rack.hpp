@@ -56,7 +56,7 @@ struct Rack {
         for (size_t r = 0; r < rows; ++r) {
             for (size_t c = 0; c < cols; ++c) {
                 slots[r][c] = RackSlot(
-                    static_cast<IdType>(r_id * 1000 + r * cols + c + 1),
+                    static_cast<IdType>(r_id * id_constants::RACK_SLOT_OFFSET + r * cols + c + 1),
                     r_id, r, c
                 );
             }

@@ -55,7 +55,7 @@ struct Port {
           type(port_type), capacity(cap) {
         for (CapacityType i = 0; i < capacity; ++i) {
             slots.emplace_back(
-                static_cast<IdType>(p_id * 100 + i + 1), 
+                static_cast<IdType>(p_id * id_constants::PORT_SLOT_OFFSET + i + 1), 
                 p_id
             );
         }

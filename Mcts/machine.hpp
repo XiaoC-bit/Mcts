@@ -97,14 +97,14 @@ struct Machine {
         : id(mach_id), name(mach_name), position(pos) {
         for (size_t i = 0; i < num_tables; ++i) {
             tables.emplace_back(
-                static_cast<IdType>(mach_id * 1000 + i + 1), 
+                static_cast<IdType>(mach_id * id_constants::MACHINE_TABLE_OFFSET + i + 1), 
                 mach_id, 
                 "Table_" + std::to_string(i + 1)
             );
         }
         for (size_t i = 0; i < num_tool_slots; ++i) {
             tool_slots.emplace_back(
-                static_cast<IdType>(mach_id * 10000 + i + 1), 
+                static_cast<IdType>(mach_id * id_constants::MACHINE_TOOL_SLOT_OFFSET + i + 1), 
                 mach_id
             );
         }

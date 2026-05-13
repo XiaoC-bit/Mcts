@@ -62,10 +62,10 @@ struct Tool : public Material {
     uint32_t remaining_life;
     bool is_worn;
     
-    Tool() : Material(), tool_life(1000), remaining_life(1000), is_worn(false) {}
+    Tool() : Material(), tool_life(id_constants::DEFAULT_TOOL_LIFE), remaining_life(id_constants::DEFAULT_TOOL_LIFE), is_worn(false) {}
     
     Tool(IdType id, const std::string& name, const std::string& category,
-         uint32_t life = 1000)
+         uint32_t life = id_constants::DEFAULT_TOOL_LIFE)
         : Material(id, MaterialType::TOOL, name, category),
           tool_life(life), remaining_life(life), is_worn(false) {}
     
@@ -91,7 +91,7 @@ public:
     }
     
     IdType create_tool(const std::string& name, const std::string& category, 
-                      uint32_t life = 1000) {
+                      uint32_t life = id_constants::DEFAULT_TOOL_LIFE) {
         IdType id = next_id++;
         materials[id] = std::make_unique<Tool>(id, name, category, life);
         return id;

@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="fms_types.cpp" />
+    <ClCompile Include="id_constants.cpp" />
     <ClCompile Include="mcts.cpp" />
     <ClCompile Include="simulator.cpp" />
   </ItemGroup>
@@ -148,6 +149,7 @@
     <ClInclude Include="action.hpp" />
     <ClInclude Include="event.hpp" />
     <ClInclude Include="fms_types.hpp" />
+    <ClInclude Include="id_constants.hpp" />
     <ClInclude Include="location.hpp" />
     <ClInclude Include="machine.hpp" />
     <ClInclude Include="material.hpp" />

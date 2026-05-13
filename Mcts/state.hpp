@@ -7,6 +7,7 @@
 #include "material.hpp"
 #include "event.hpp"
 #include "location.hpp"
+#include "id_constants.hpp"
 #include <vector>
 #include <unordered_map>
 #include <memory>
@@ -130,7 +131,7 @@ public:
     }
     
     IdType create_tool(const std::string& name, const std::string& category, 
-                      uint32_t life = 1000) {
+                      uint32_t life = id_constants::DEFAULT_TOOL_LIFE) {
         IdType id = static_cast<IdType>(materials.size() + 1);
         materials[id] = std::make_unique<Tool>(id, name, category, life);
         return id;

@@ -1,5 +1,6 @@
 #pragma once
 #include "fms_types.hpp"
+#include "id_constants.hpp"
 #include <string>
 
 namespace fms {
@@ -61,29 +62,29 @@ struct Action {
     }
     
     std::string to_string() const {
-        std::string result = "Robot " + std::to_string(robot_id) + " ";
+        std::string result = "Robot_" + std::to_string(robot_id) + " ";
         
         switch (type) {
             case ActionType::PICK:
-                result += "PICK from location " + std::to_string(source_location);
+                result += "PICK from " + fms::location_id_to_name(source_location);
                 if (gripper_id != INVALID_ID) {
-                    result += " (gripper " + std::to_string(gripper_id) + ")";
+                    result += " (gripper " + fms::location_id_to_name(gripper_id) + ")";
                 }
                 break;
             case ActionType::PLACE:
-                result += "PLACE material " + std::to_string(material_id) + " to location " + std::to_string(target_location);
+                result += "PLACE WP_" + std::to_string(material_id) + " to " + fms::location_id_to_name(target_location);
                 if (gripper_id != INVALID_ID) {
-                    result += " (gripper " + std::to_string(gripper_id) + ")";
+                    result += " (gripper " + fms::location_id_to_name(gripper_id) + ")";
                 }
                 break;
             case ActionType::LOAD_MACHINE:
-                result += "LOAD_MACHINE workpiece " + std::to_string(material_id) + " to machine " + std::to_string(machine_id);
+                result += "LOAD_MACHINE WP_" + std::to_string(material_id) + " to Machine_" + std::to_string(machine_id);
                 break;
             case ActionType::UNLOAD_MACHINE:
-                result += "UNLOAD_MACHINE from machine " + std::to_string(machine_id);
+                result += "UNLOAD_MACHINE from Machine_" + std::to_string(machine_id);
                 break;
             case ActionType::CHANGE_TOOL:
-                result += "CHANGE_TOOL tool " + std::to_string(material_id) + " on machine " + std::to_string(machine_id);
+                result += "CHANGE_TOOL Tool_" + std::to_string(material_id) + " on Machine_" + std::to_string(machine_id);
                 break;
             case ActionType::WAIT:
                 result += "WAIT for " + std::to_string(duration) + "s";

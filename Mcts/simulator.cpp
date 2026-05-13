@@ -137,7 +137,7 @@ double Simulator::evaluate(const State& state) const {
     if (total_workpieces == 0) return 0.0;
     
     double throughput = static_cast<double>(processed) / static_cast<double>(total_workpieces);
-    double time_penalty = temp_state.current_time / 1000.0;
+    double time_penalty = temp_state.current_time / id_constants::TIME_PENALTY_FACTOR;
     
     return throughput - time_penalty;
 }

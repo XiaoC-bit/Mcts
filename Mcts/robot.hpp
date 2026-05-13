@@ -1,6 +1,7 @@
 #pragma once
 #include "fms_types.hpp"
 #include "location.hpp"
+#include "id_constants.hpp"
 #include <string>
 #include <vector>
 
@@ -65,7 +66,7 @@ struct Robot {
           has_seventh_axis(seventh_axis), 
           total_load_capacity(10.0 * num_grippers), current_load(0.0) {
         for (size_t i = 0; i < num_grippers; ++i) {
-            grippers.emplace_back(static_cast<IdType>(rob_id * 100 + i + 1), rob_id);
+            grippers.emplace_back(static_cast<IdType>(rob_id * id_constants::ROBOT_GRIPPER_OFFSET + i + 1), rob_id);
         }
     }
     

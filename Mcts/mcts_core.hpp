@@ -4,6 +4,7 @@
 #include <vector>
 #include "mcts_node.hpp"
 #include "mcts_interface.hpp"
+#include "id_constants.hpp"
 
 template <typename Action>
 struct PlanResult {
@@ -60,7 +61,7 @@ void backpropagation(Node<State, Action>* node, double score) {
 }
 
 template <typename State, typename Action>
-Action mcts(const State& root_state, const MCTSInterface<State, Action>& game, int iterations = 1000) {
+Action mcts(const State& root_state, const MCTSInterface<State, Action>& game, int iterations = fms::id_constants::DEFAULT_MCTS_ITERATIONS) {
 
     auto root = std::make_unique<Node<State, Action>>(root_state, Action{}, nullptr, game);
     root->n = 1;
@@ -80,14 +81,23 @@ Action mcts(const State& root_state, const MCTSInterface<State, Action>& game, i
 }
 
 template <typename State, typename Action>
-PlanResult<Action> mcts_plan(const State& root_state, const MCTSInterface<State, Action>& game, int iterations = 1000) {
+PlanResult<Action> mcts_plan(const State& root_state, const MCTSInterface<State, Action>& game, int iterations = fms::id_constants::DEFAULT_MCTS_ITERATIONS) {
     auto root = std::make_unique<Node<State, Action>>(root_state, Action{}, nullptr, game);
     root->n = 1;
 
     for (int i = 0; i < iterations; i++) {
+		//找到最值得探索的节点
         Node<State, Action>* node = selection(root.get(), game);
+		//从该节点扩展一个子节点
+		//扩展的意思是从该节点的子节点中，找到一个没有探索的子节点，对其进行探索，也就是罗列出该节点的所有合法动作，
+		//罗列后，将这个子节点加入到该节点的子节点列表中，并返回这个子节点
         Node<State, Action>* child = expansion(node, game);
+
+		//对这个子节点进行模拟，得到一个分数
+		//模拟的意思是从这个子节点开始，随机选择合法动作，不断往下探索，直到达到终止状态，然后计算这个终止状态的分数
         double score = simulation(child->state, game);
+
+		//将这个分数反向传播回父节点，更新父节点的访问次数和总分数
         backpropagation(child, score);
     }
 

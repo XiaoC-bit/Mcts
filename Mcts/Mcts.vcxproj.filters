@@ -24,6 +24,9 @@
     <ClCompile Include="simulator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="id_constants.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mcts_node.hpp">
@@ -66,6 +69,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="action.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="id_constants.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
