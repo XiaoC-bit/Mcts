@@ -318,6 +318,156 @@ public:
         }
         return count;
     }
+    
+    size_t count_processing_workpieces() const {
+        size_t count = 0;
+        for (const auto& machine : machines) {
+            for (const auto& table : machine.tables) {
+                if (table.is_processing()) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    
+    size_t count_loaded_workpieces() const {
+        size_t count = 0;
+        for (const auto& machine : machines) {
+            for (const auto& table : machine.tables) {
+                if (!table.is_idle()) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    
+    size_t get_num_processing_machines() const {
+        size_t count = 0;
+        for (const auto& machine : machines) {
+            for (const auto& table : machine.tables) {
+                if (table.is_processing()) {
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+    
+    size_t get_total_machine_tables() const {
+        size_t count = 0;
+        for (const auto& machine : machines) {
+            count += machine.tables.size();
+        }
+        return count;
+    }
+    
+    double get_machine_utilization() const {
+        size_t total = get_total_machine_tables();
+        if (total == 0) return 0.0;
+        return static_cast<double>(count_processing_workpieces()) / static_cast<double>(total);
+    }
+    
+    size_t count_workpieces_in_system() const {
+        size_t count = 0;
+        for (const auto& pair : materials) {
+            if (pair.second->type == MaterialType::WORKPIECE) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    size_t count_pending_workpieces() const {
+        size_t count = 0;
+        for (const auto& pair : materials) {
+            const Workpiece* wp = dynamic_cast<const Workpiece*>(pair.second.get());
+            if (wp && !wp->is_processed) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    size_t count_workpieces_on_robots() const {
+        size_t count = 0;
+        for (const auto& robot : robots) {
+            for (const auto& gripper : robot.grippers) {
+                if (!gripper.is_empty()) {
+                    const Material* mat = get_material(gripper.material_id);
+                    if (mat && mat->type == MaterialType::WORKPIECE) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+    
+    size_t count_workpieces_on_racks() const {
+        size_t count = 0;
+        for (const auto& rack : racks) {
+            for (const auto& row : rack.slots) {
+                for (const auto& slot : row) {
+                    if (!slot.is_empty()) {
+                        const Material* mat = get_material(slot.material_id);
+                        if (mat && mat->type == MaterialType::WORKPIECE) {
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+        return count;
+    }
+    
+    size_t count_workpieces_on_ports() const {
+        size_t count = 0;
+        for (const auto& port : input_ports) {
+            for (const auto& slot : port.slots) {
+                if (slot.is_occupied) {
+                    const Material* mat = get_material(slot.material_id);
+                    if (mat && mat->type == MaterialType::WORKPIECE) {
+                        count++;
+                    }
+                }
+            }
+        }
+        for (const auto& port : output_ports) {
+            for (const auto& slot : port.slots) {
+                if (slot.is_occupied) {
+                    const Material* mat = get_material(slot.material_id);
+                    if (mat && mat->type == MaterialType::WORKPIECE) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+    
+    size_t count_workpieces_awaiting_processing() const {
+        return count_workpieces_on_robots() + count_workpieces_on_racks();
+    }
+    
+    bool has_workpiece_ready_for_machine() const {
+        for (const auto& robot : robots) {
+            for (const auto& gripper : robot.grippers) {
+                if (!gripper.is_empty()) {
+                    const Material* mat = get_material(gripper.material_id);
+                    if (mat && mat->type == MaterialType::WORKPIECE) {
+                        const Workpiece* wp = static_cast<const Workpiece*>(mat);
+                        if (!wp->is_processed) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 };
 
 } // namespace fms

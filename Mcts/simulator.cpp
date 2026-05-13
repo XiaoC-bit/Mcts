@@ -135,23 +135,56 @@ bool Simulator::is_terminal(const State& state) const {
 }
 
 double Simulator::evaluate(const State& state) const {
-    State temp_state = state;
-    process_events(temp_state);
+    constexpr double PROCESSING_BONUS = 100.0;
+    constexpr double LOADED_READY_BONUS = 30.0;
+    constexpr double IDLE_MACHINE_PENALTY = 20.0;
+    constexpr double WORKPIECE_ON_ROBOT_PENALTY = 15.0;
+    constexpr double WORKPIECE_ON_RACK_PENALTY = 10.0;
+    constexpr double UTILIZATION_BONUS = 50.0;
+    constexpr double PROCESSING_ADVANCEMENT_BONUS = 20.0;
     
-    size_t processed = temp_state.count_processed_workpieces();
-    size_t total_workpieces = 0;
-    for (const auto& pair : temp_state.materials) {
-        if (pair.second->type == MaterialType::WORKPIECE) {
-            total_workpieces++;
+    double score = 0.0;
+    
+    size_t processing_count = state.count_processing_workpieces();
+    size_t loaded_count = state.count_loaded_workpieces();
+    size_t idle_tables = state.get_num_idle_machine_tables();
+    size_t on_robot = state.count_workpieces_on_robots();
+    size_t on_rack = state.count_workpieces_on_racks();
+    double utilization = state.get_machine_utilization();
+    
+    double avg_progress = 0.0;
+    if (processing_count > 0) {
+        size_t total_progress = 0;
+        for (const auto& machine : state.machines) {
+            for (const auto& table : machine.tables) {
+                if (table.is_processing()) {
+                    const Workpiece* wp = state.get_workpiece(table.workpiece_id);
+                    if (wp) {
+                        total_progress += wp->completed_steps;
+                    }
+                }
+            }
         }
+        avg_progress = static_cast<double>(total_progress) / static_cast<double>(processing_count);
     }
     
-    if (total_workpieces == 0) return 0.0;
+    score += processing_count * PROCESSING_BONUS;
+    score += (loaded_count - processing_count) * LOADED_READY_BONUS;
+    score -= idle_tables * IDLE_MACHINE_PENALTY;
+    score -= on_robot * WORKPIECE_ON_ROBOT_PENALTY;
+    score -= on_rack * WORKPIECE_ON_RACK_PENALTY;
+    score += utilization * UTILIZATION_BONUS;
+    score += avg_progress * PROCESSING_ADVANCEMENT_BONUS;
     
-    double throughput = static_cast<double>(processed) / static_cast<double>(total_workpieces);
-    double time_penalty = temp_state.current_time / id_constants::TIME_PENALTY_FACTOR;
+    size_t total_tables = state.get_total_machine_tables();
+    double max_possible_score = total_tables * PROCESSING_BONUS + UTILIZATION_BONUS;
     
-    return throughput - time_penalty;
+    if (max_possible_score > 0) {
+        double normalized_score = score / max_possible_score;
+        return std::max(0.0, std::min(1.0, normalized_score));
+    }
+    
+    return 0.0;
 }
 
 void Simulator::process_events(State& state) const {
