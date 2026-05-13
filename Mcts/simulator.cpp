@@ -119,7 +119,19 @@ State Simulator::apply(const State& state, const Action& action) const {
 }
 
 bool Simulator::is_terminal(const State& state) const {
-    return !state.has_pending_workpieces() && state.event_queue.empty();
+    if (!state.has_pending_workpieces()) {
+        return true;
+    }
+    
+    bool all_machines_busy = true;
+    for (const auto& machine : state.machines) {
+        if (machine.has_idle_table()) {
+            all_machines_busy = false;
+            break;
+        }
+    }
+    
+    return all_machines_busy;
 }
 
 double Simulator::evaluate(const State& state) const {
